@@ -1081,6 +1081,19 @@ export const getWalletCryptoPriceHistory = symbol => {
   ).then(res => res.json());
 };
 
+export const getTransfersHistory = (username, skip = 0, limit = 500) => {
+  return fetch(
+    `${config.campaignApiPrefix}${config.payments}${config.transfers_history}?userName=${username}&skip=${skip}&limit=${limit}`,
+    {
+      headers,
+      method: 'GET',
+    },
+  )
+    .then(res => res.json())
+    .then(data => data)
+    .catch(err => err);
+};
+
 // injected as extra argument in Redux Thunk
 export const waivioAPI = {
   getAuthenticatedUserMetadata,

@@ -20,6 +20,8 @@ const initialState = {
   accountHistoryFilter: [],
   currentDisplayedActions: [],
   currentFilteredActions: [],
+  transactionsHistoryLoading: false,
+  transactions: [],
 };
 
 export default function walletReducer(state = initialState, action) {
@@ -88,6 +90,23 @@ export default function walletReducer(state = initialState, action) {
         },
         usersAccountHistoryLoading: false,
         balance: action.payload.balance,
+      };
+    }
+    case walletActions.GET_TRANSACTIONS_HISTORY.START: {
+      return {
+        transactionsHistoryLoading: true,
+      };
+    }
+    case walletActions.GET_TRANSACTIONS_HISTORY.SUCCESS: {
+      return {
+        ...state,
+        transactions: [...state.transactions, action.payload.wallet],
+        transactionsHistoryLoading: false,
+      };
+    }
+    case walletActions.GET_TRANSACTIONS_HISTORY.ERROR: {
+      return {
+        transactionsHistoryLoading: false,
       };
     }
     case walletActions.GET_USER_ACCOUNT_HISTORY.ERROR:
