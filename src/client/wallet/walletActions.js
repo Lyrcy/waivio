@@ -224,7 +224,7 @@ export const loadMoreCurrentUsersActions = username => (dispatch, getState) => {
   }
 };
 
-export const getUsersTransactionsOurApi = username => dispatch =>
+export const getUserTransactionHistory = username => dispatch =>
   dispatch({
     type: GET_TRANSACTIONS_HISTORY.ACTION,
     payload: {

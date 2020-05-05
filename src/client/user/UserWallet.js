@@ -24,11 +24,13 @@ import {
   getCryptosPriceHistory,
   getScreenSize,
   getGuestUserBalance,
+  getTransactions,
 } from '../reducers';
 import {
   getGlobalProperties,
   getUserAccountHistory,
   getMoreUserAccountHistory,
+  getUserTransactionHistory,
 } from '../wallet/walletActions';
 import { getAccount } from './usersActions';
 import WalletSidebar from '../components/Sidebar/WalletSidebar';
@@ -57,10 +59,12 @@ import WalletSidebar from '../components/Sidebar/WalletSidebar';
     ),
     cryptosPriceHistory: getCryptosPriceHistory(state),
     guestBalance: getGuestUserBalance(state),
+    transactionHistory: getTransactions(state),
   }),
   {
     getGlobalProperties,
     getUserAccountHistory,
+    getUserTransactionHistory,
     getMoreUserAccountHistory,
     getAccount,
   },
@@ -86,6 +90,8 @@ class Wallet extends Component {
     authenticatedUserName: PropTypes.string,
     screenSize: PropTypes.string.isRequired,
     guestBalance: PropTypes.number,
+    transactionHistory: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    getUserTransactionHistory: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -102,6 +108,7 @@ class Wallet extends Component {
       user,
       isCurrentUser,
       authenticatedUserName,
+      transactionHistory,
     } = this.props;
     const username = isCurrentUser
       ? authenticatedUserName
@@ -118,6 +125,9 @@ class Wallet extends Component {
     if (isEmpty(user)) {
       this.props.getAccount(username);
     }
+    if (!transactionHistory.length) {
+      this.props.getUserTransactionHistory(authenticatedUserName);
+    }
   }
 
   render() {
@@ -132,6 +142,7 @@ class Wallet extends Component {
       userHasMoreActions,
       usersAccountHistory,
       cryptosPriceHistory,
+      transactionHistory,
       guestBalance,
       screenSize,
     } = this.props;
@@ -156,6 +167,7 @@ class Wallet extends Component {
         <Loading style={{ marginTop: '20px' }} />
       ) : (
         <UserWalletTransactions
+          transactionHistory={transactionHistory}
           transactions={transactions}
           actions={actions}
           currentUsername={user.name}

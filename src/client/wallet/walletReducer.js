@@ -93,17 +93,16 @@ export default function walletReducer(state = initialState, action) {
       };
     }
     case walletActions.GET_TRANSACTIONS_HISTORY.START: {
-      return {
-        transactionsHistoryLoading: true,
-      };
+      return { ...state, transactionsHistoryLoading: true };
     }
     case walletActions.GET_TRANSACTIONS_HISTORY.SUCCESS: {
       return {
         ...state,
-        transactions: [...state.transactions, action.payload.wallet],
+        transactions: [...state.transactions, ...action.payload.wallet],
         transactionsHistoryLoading: false,
       };
     }
+
     case walletActions.GET_TRANSACTIONS_HISTORY.ERROR: {
       return {
         transactionsHistoryLoading: false,
@@ -228,6 +227,7 @@ export const getUsersAccountHistoryLoading = state => state.usersAccountHistoryL
 export const getLoadingEstAccountValue = state => state.loadingEstAccountValue;
 export const getLoadingGlobalProperties = state => state.loadingGlobalProperties;
 export const getUsersAccountHistory = state => state.usersAccountHistory;
+export const getTransactions = state => state.transactions;
 export const getLoadingMoreUsersAccountHistory = state => state.loadingMoreUsersAccountHistory;
 export const getUserHasMoreAccountHistory = (state, username) => {
   const lastAction = last(state.usersAccountHistory[getUserDetailsKey(username)]) || {};
