@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import _ from 'lodash';
 import React from 'react';
-import TchChart from '../../TchChart';
+// import TchChart from '../../TchChart';
+// import TVChart from '../../TVChart';
+// import TVEmbedChart from '../../TrendingViewChart/TVEmbedChart';
+import TVWContainer from '../../TVWidget';
 import TradingForm from '../../TradingForm';
 import './ModalDealConfirmation.less';
 
@@ -36,7 +39,7 @@ const ModalDealConfirmation = props => {
         >
           <div className="modal-open-deals">
             <div style={{ width: '100%', height: '70vh' }}>
-              <TchChart
+              <TVWContainer
                 quoteSecurity={props.modalInfo.quote.security}
                 market={props.modalInfo.quote.market}
                 period={'60'}
