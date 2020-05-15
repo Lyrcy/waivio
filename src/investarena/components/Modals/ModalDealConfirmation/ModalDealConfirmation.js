@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import _ from 'lodash';
 import React from 'react';
-import TchChart from '../../TchChart';
+// import TchChart from '../../TchChart';
+import TVWidget from '../../TVWidget';
 import TradingForm from '../../TradingForm';
 import './ModalDealConfirmation.less';
 
@@ -20,7 +21,8 @@ const ModalDealConfirmation = props => {
     props.isModalOpenDealsOpen &&
     props.modalInfo &&
     !_.isEmpty(props.modalInfo) &&
-    props.modalInfo.quote;
+    props.modalInfo.quote &&
+    props.modalInfo.quote.security;
   return (
     <React.Fragment>
       {isModalOpen && (
@@ -36,11 +38,13 @@ const ModalDealConfirmation = props => {
         >
           <div className="modal-open-deals">
             <div style={{ width: '100%', height: '70vh' }}>
-              <TchChart
-                quoteSecurity={props.modalInfo.quote.security}
-                market={props.modalInfo.quote.market}
-                period={'60'}
-              />
+              {/* <TchChart */}
+              {/*   quoteSecurity={props.modalInfo.quote.security} */}
+              {/*   market={props.modalInfo.quote.market} */}
+              {/*   period={'60'} */}
+              {/* /> */}
+
+              <TVWidget quoteSecurity={props.modalInfo.quote.security} />
             </div>
             {props.platformName !== 'widgets' && (
               <TradingForm caller="od-pm" quoteSecurity={props.modalInfo.quote.security} />
@@ -53,5 +57,9 @@ const ModalDealConfirmation = props => {
 };
 
 ModalDealConfirmation.propTypes = propTypes;
+
+ModalDealConfirmation.defaultProps = {
+  modalInfo: {},
+};
 
 export default injectIntl(ModalDealConfirmation);
