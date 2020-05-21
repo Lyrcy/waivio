@@ -46,13 +46,15 @@ const ObjectAvatar = ({ item, size }) => {
 };
 
 ObjectAvatar.propTypes = {
-  item: PropTypes.shape({ parent: PropTypes.oneOfType([PropTypes.shape(), PropTypes.string]) }),
+  item: PropTypes.shape(),
+  parent: PropTypes.shape(),
   size: PropTypes.number,
 };
 
 ObjectAvatar.defaultProps = {
   size: 100,
   item: {},
+  parent: {},
 };
 
 export default ObjectAvatar;

@@ -83,7 +83,7 @@ export default class Wrapper extends React.PureComponent {
     setUsedLocale: PropTypes.func,
     busyLogin: PropTypes.func,
     nightmode: PropTypes.bool,
-    isNewUser: PropTypes.bool.isRequired,
+    isNewUser: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -102,6 +102,7 @@ export default class Wrapper extends React.PureComponent {
     setUsedLocale: () => {},
     busyLogin: () => {},
     nightmode: false,
+    isNewUser: false,
   };
 
   static async fetchData({ store, req }) {
