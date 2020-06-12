@@ -182,6 +182,7 @@ export default class Transfer extends React.Component {
         isSelected: false,
       });
     }
+    console.log('searchBarValue: ', this.state.searchBarValue);
   }
 
   debouncedSearch = debounce(value => this.props.searchAutoComplete(value, 3, 15), 300);
@@ -398,23 +399,35 @@ export default class Transfer extends React.Component {
     this.setState({ dropdownOpen: true });
   }
 
+  foo = () => {
+    const deleteCurrentUser = 'lol';
+    return deleteCurrentUser;
+  };
+
   showSelectedUser = () => {
     const { autoCompleteSearchResults } = this.props;
     const foundUsers = autoCompleteSearchResults.users;
     const { searchBarValue } = this.state;
-
     const currentUser = (
       <div className="Transfer__search-content-wrap-current">
         <div className="Transfer__search-content-wrap-current-user">
           <Avatar username={searchBarValue} size={40} />
           <div className="Transfer__search-content">{searchBarValue}</div>
         </div>
-        <i className="iconfont icon-delete Transfer__delete-icon" />
+        <span
+          role="presentation"
+          onClick={() =>
+            this.setState({
+              isSelected: false,
+              searchBarValue: '',
+            })
+          }
+          className="iconfont icon-delete Transfer__delete-icon"
+        />
       </div>
     );
 
     console.log('foundUsers: ', foundUsers);
-    console.log('searchBarValue: ', searchBarValue);
     return currentUser;
   };
 
@@ -423,7 +436,6 @@ export default class Transfer extends React.Component {
       { searchBarActive: false, dropdownOpen: false, isSelected: true },
       this.props.resetSearchAutoCompete,
     );
-    console.log('click');
   }
 
   handleOnChangeForAutoComplete(value) {
