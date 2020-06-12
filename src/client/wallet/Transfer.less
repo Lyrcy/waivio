@@ -1,7 +1,39 @@
 @import (reference) '../styles/custom.less';
 @import (reference) '../styles/modules/variables.less';
 
+.Transfer__search-autocomplete.ant-select-dropdown-menu-item-active {
+  background-color: @white;
+
+  &:hover {
+    background-color: @white-darker;
+  }
+}
+
 .Transfer {
+  &__search-content-wrap {
+    display: flex;
+    align-items: center;
+
+    &-current {
+      display: flex;
+      border: 1px solid @white-gainsboro;
+      border-radius: 5px;
+      padding: 15px;
+    }
+  }
+
+  &__search-content {
+    margin-left: 10px;
+    max-width: calc(100vw - 210px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    @media @small, @medium, @large {
+      max-width: 350px;
+    }
+  }
+
   input.ant-input {
     height: 38px !important;
   }
