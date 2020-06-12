@@ -407,6 +407,7 @@ export default class Transfer extends React.Component {
       <div className="Transfer__search-content-wrap-current">
         <Avatar username={searchBarValue} size={40} />
         <div className="Transfer__search-content">{searchBarValue}</div>
+        <i className="iconfont icon-delete Transfer__delete-icon" />
       </div>
     );
 
