@@ -399,11 +399,6 @@ export default class Transfer extends React.Component {
     this.setState({ dropdownOpen: true });
   }
 
-  foo = () => {
-    const deleteCurrentUser = 'lol';
-    return deleteCurrentUser;
-  };
-
   showSelectedUser = () => {
     const { autoCompleteSearchResults } = this.props;
     const foundUsers = autoCompleteSearchResults.users;
@@ -493,8 +488,7 @@ export default class Transfer extends React.Component {
     const { autoCompleteSearchResults } = this.props;
     const foundUsers = autoCompleteSearchResults.users;
     const { Option } = AutoComplete;
-
-    const drop = map(foundUsers, option => (
+    return map(foundUsers, option => (
       <Option
         marker={Transfer.markers.USER}
         key={option.account}
@@ -507,7 +501,6 @@ export default class Transfer extends React.Component {
         </div>
       </Option>
     ));
-    return drop;
   };
 
   render() {
@@ -516,6 +509,7 @@ export default class Transfer extends React.Component {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const isMobile = screenSize.includes('xsmall') || screenSize.includes('small');
     const to = getFieldValue('to');
+    console.log('to: ', to);
     const guestName = to && guestUserRegex.test(to);
 
     const balance =
