@@ -1167,5 +1167,6 @@
   "you_subscribed_to_other_users_blacklists": "You subscribed to other users' blacklists",
   "you_unsubscribed_from_other_users_blacklists": "You unsubscribed from other users' blacklists",
   "subscribe": "Subscribe",
-  "unsubscribe": "Unsubscribe"
+  "unsubscribe": "Unsubscribe",
+  "Followed_wobject": "Followed {object_type} {name}"
 }

@@ -34,6 +34,11 @@ class UserActionIcon extends React.Component {
           const actionJSON = JSON.parse(actionDetails.json);
           const customActionType = actionJSON[0];
           const customActionDetails = actionJSON[1];
+          const followWobject = get(actionDetails, 'id') === 'follow_wobject';
+
+          if (followWobject) {
+            return 'icon-addnote';
+          }
 
           if (!includes(accountHistoryConstants.PARSED_CUSTOM_JSON_IDS, actionDetails.id)) {
             return 'icon-document';

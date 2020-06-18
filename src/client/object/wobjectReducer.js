@@ -417,6 +417,7 @@ export default function wobjectReducer(state = initialState, action) {
       return state;
     }
     case FOLLOW_OBJECT.SUCCESS: {
+      console.log('action: ', state.wobject);
       if (state.wobject.author_permlink === action.meta.permlink) {
         return {
           ...state,

@@ -9,6 +9,8 @@ const CustomJSONMessage = ({ actionDetails }) => {
   const customActionType = actionJSON[0];
   const customActionDetails = actionJSON[1];
 
+  console.log('actionJSON: ', actionJSON);
+
   if (customActionType === accountHistoryConstants.FOLLOW) {
     let messageId = '';
     let messageDefault = '';
@@ -23,8 +25,8 @@ const CustomJSONMessage = ({ actionDetails }) => {
         messageDefault = 'Followed {following}';
         break;
       default:
-        messageId = 'unfollowed_user';
-        messageDefault = 'Unfollowed {following}';
+        messageId = 'Followed_wobject';
+        messageDefault = 'Followed {object_type} {name}';
         break;
     }
 
@@ -36,6 +38,12 @@ const CustomJSONMessage = ({ actionDetails }) => {
           values={{
             following: (
               <Link to={`/@${customActionDetails.following}`}>{customActionDetails.following}</Link>
+            ),
+            object_type: 'type',
+            name: (
+              <Link to={`/object/${customActionDetails.author_permlink}`}>
+                {customActionDetails.author_permlink}
+              </Link>
             ),
           }}
         />
@@ -49,9 +57,9 @@ const CustomJSONMessage = ({ actionDetails }) => {
           defaultMessage="reblogged {postLink}"
           values={{
             postLink: (
-              <Link to={`/@${customActionDetails.author}/${customActionDetails.permlink}`}>{`@${
-                customActionDetails.author
-              }/${customActionDetails.permlink}`}</Link>
+              <Link
+                to={`/@${customActionDetails.author}/${customActionDetails.permlink}`}
+              >{`@${customActionDetails.author}/${customActionDetails.permlink}`}</Link>
             ),
           }}
         />
