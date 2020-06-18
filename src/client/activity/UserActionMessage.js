@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { includes } from 'lodash';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Link } from 'react-router-dom';
 import formatter from '../helpers/steemitFormatter';
@@ -96,9 +95,9 @@ class UserActionMessage extends React.Component {
           />
         );
       case accountHistoryConstants.CUSTOM_JSON:
-        if (includes(accountHistoryConstants.PARSED_CUSTOM_JSON_IDS, actionDetails.id)) {
-          return UserActionMessage.renderDefault(actionType);
-        }
+        // if (!_.includes(accountHistoryConstants.PARSED_CUSTOM_JSON_IDS, actionDetails.id)) {
+        //   return UserActionMessage.renderDefault(actionType);
+        // }
         return <CustomJSONMessage actionDetails={actionDetails} />;
       case accountHistoryConstants.ACCOUNT_UPDATE:
         return <FormattedMessage id="account_updated" defaultMessage="Account Updated" />;

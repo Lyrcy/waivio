@@ -9,7 +9,7 @@ const CustomJSONMessage = ({ actionDetails }) => {
   const customActionType = actionJSON[0];
   const customActionDetails = actionJSON[1];
 
-  console.log('actionJSON: ', actionJSON);
+  // console.log('actionJSON: ', actionJSON);
 
   if (customActionType === accountHistoryConstants.FOLLOW) {
     let messageId = '';
