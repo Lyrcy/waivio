@@ -201,7 +201,7 @@ export default class Wobj extends React.Component {
 
     return (
       <div className="main-panel">
-        <h1>davdadvdavvdadvsdsvdfsvsvfs</h1>
+        <h1>sdvdfsvds dvs</h1>
         <Helmet>
           <title>{objectName}</title>
           <link rel="canonical" href={canonicalUrl} />
