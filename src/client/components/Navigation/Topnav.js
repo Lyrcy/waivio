@@ -141,16 +141,6 @@ class Topnav extends React.Component {
     this.hideAutoCompleteDropdown = this.hideAutoCompleteDropdown.bind(this);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.searchBarValue !== this.state.searchBarValue &&
-      this.state.searchBarValue !== ''
-    ) {
-      this.debouncedSearchByUser(this.state.searchBarValue);
-      this.debouncedSearchByObjectTypes(this.state.searchBarValue);
-    }
-  }
-
   getTranformSearchCountData = searchResults => {
     const { objectTypesCount, wobjectsCounts, usersCount } = searchResults;
 
