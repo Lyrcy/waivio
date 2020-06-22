@@ -130,10 +130,9 @@ export const reload = () => (dispatch, getState, { steemConnectAPI }) =>
 export const logout = () => (dispatch, getState, { busyAPI, steemConnectAPI }) => {
   const state = getState();
   let accessToken = Cookie.get('access_token');
-  const guestAccessToken = Cookie.get('waivio_token');
 
-  if (guestAccessToken) accessToken = guestAccessToken;
   if (state.auth.isGuestUser) {
+    accessToken = localStorage.getItem('accessToken');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('accessTokenExpiration');
     localStorage.removeItem('socialName');
