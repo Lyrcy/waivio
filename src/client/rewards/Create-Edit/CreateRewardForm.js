@@ -1,4 +1,4 @@
-import { isEmpty, map, includes } from 'lodash';
+import { includes, isEmpty, map } from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -37,6 +37,7 @@ class CreateRewardForm extends React.Component {
     currentSteemDollarPrice: PropTypes.number,
     /* from context */
     usedLocale: PropTypes.string,
+    /* from connect */
     rate: PropTypes.number.isRequired,
     rewardFund: PropTypes.shape().isRequired,
   };
