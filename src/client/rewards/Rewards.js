@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { message } from 'antd';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -8,30 +7,29 @@ import { renderRoutes } from 'react-router-config';
 import { Helmet } from 'react-helmet';
 import { injectIntl } from 'react-intl';
 import {
-  isEmpty,
-  map,
-  size,
-  includes,
-  remove,
+  filter,
   find,
   flatten,
-  uniqBy,
   get,
-  filter,
+  includes,
+  isEmpty,
   isEqual,
+  map,
+  remove,
+  size,
+  uniqBy,
 } from 'lodash';
 import { HBD } from '../../common/constants/cryptos';
 import {
   getAuthenticatedUser,
   getAuthenticatedUserName,
   getCryptosPriceHistory,
-  getObjectsMap,
-  getIsLoaded,
-  getUserLocation,
-  getPendingUpdate,
   getIsMapModalOpen,
+  getObjectsMap,
+  getPendingUpdate,
   getSuitableLanguage,
   getUpdatedMap,
+  getUserLocation,
 } from '../reducers';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import Affix from '../components/Utils/Affix';
@@ -51,12 +49,11 @@ import Proposition from './Proposition/Proposition';
 import Campaign from './Campaign/Campaign';
 import MapWrap from '../components/Maps/MapWrap/MapWrap';
 import MobileNavigation from '../components/Navigation/MobileNavigation/MobileNavigation';
-// eslint-disable-next-line import/extensions
-import * as apiConfig from '../../waivioApi/config';
+import * as apiConfig from '../../waivioApi/config.json';
 import {
-  setUpdatedFlag,
-  resetUpdatedFlag,
   getPropositionsForMap,
+  resetUpdatedFlag,
+  setUpdatedFlag,
 } from '../components/Maps/mapActions';
 import { delay } from './rewardsHelpers';
 import { RADIUS } from '../../common/constants/map';
@@ -68,7 +65,6 @@ import { getZoom } from '../components/Maps/mapHelper';
 @injectIntl
 @connect(
   state => ({
-    loaded: getIsLoaded(state),
     username: getAuthenticatedUserName(state),
     userLocation: getUserLocation(state),
     cryptosPriceHistory: getCryptosPriceHistory(state),
