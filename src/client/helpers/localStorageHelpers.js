@@ -50,3 +50,18 @@ export const getLocale = () => store.get('locale') || 'en';
 export const setLocale = locale => {
   store.set('locale', locale);
 };
+
+export const setGuestAccessToken = token => {
+  store.set('accessToken', token);
+};
+export const setGuestName = name => {
+  store.set('guestName', name);
+};
+
+export const getGuestAccessToken = () => store.get('accessToken');
+export const getGuestUserName = () => store.get('guestName');
+
+export const removeGuestAuthData = () => {
+  store.remove('accessToken');
+  store.remove('guestName');
+};
