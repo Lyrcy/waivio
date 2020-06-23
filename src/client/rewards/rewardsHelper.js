@@ -1,65 +1,29 @@
 import { useSelector } from 'react-redux';
-import { isEmpty, uniqBy, map, get, reduce } from 'lodash';
+import { get, isEmpty, map, reduce, uniqBy } from 'lodash';
 import moment from 'moment';
 import { getFieldWithMaxWeight } from '../object/wObjectHelper';
 import { REWARD } from '../../common/constants/rewards';
 import config from '../../waivioApi/routes';
 
-export const displayLimit = 10;
-
 export const rewardPostContainerData = {
   author: 'monterey',
   permlink: 'test-post',
 };
-export const preparePropositionReqData = ({
-  username,
-  match,
-  coordinates,
-  area,
-  radius,
-  sort,
-  types,
-  guideNames,
-  limit,
-  simplified,
-  firstMapLoad,
-}) => {
+export const preparePropositionReqData = ({ username, match, limit = 10, sort, ...args }) => {
   const reqData = {
-    limit: displayLimit,
+    limit,
     requiredObject: match.params.campaignParent || match.params.name,
     userName: username,
     match,
     sort,
   };
 
-  if (coordinates && coordinates.length > 0) {
-    reqData.coordinates = coordinates;
-    reqData.radius = radius;
-  }
-  if (area && area.length > 0) {
-    reqData.area = area;
-    if (radius) reqData.radius = radius;
-  }
-  if (types && guideNames) {
-    reqData.types = types;
-    reqData.guideNames = guideNames;
-  }
-  if (limit) reqData.limit = limit;
-  if (simplified) reqData.simplified = simplified;
-  if (firstMapLoad) reqData.firstMapLoad = firstMapLoad;
+  Object.keys(args).forEach(argName => {
+    reqData[argName] = args[argName];
+  });
 
-  switch (match.params.filterKey) {
-    case 'active':
-      reqData.userName = username;
-      break;
-    case 'history':
-      reqData.status = ['inactive', 'expired', 'deleted', 'payed'];
-      break;
-    case 'reserved':
-      reqData.userName = username;
-      break;
-    default:
-      break;
+  if (match.params.filterKey === 'history') {
+    reqData.status = ['inactive', 'expired', 'deleted', 'payed'];
   }
   return reqData;
 };
