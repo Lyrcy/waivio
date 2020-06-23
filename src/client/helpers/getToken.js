@@ -3,8 +3,8 @@ import { setGuestAccessToken, setGuestName } from './localStorageHelpers';
 
 export const setToken = async (socialToken, social, regData) => {
   try {
-    const { userData, token, expiration } = await getAccessToken(socialToken, social, regData);
-    setGuestAccessToken(token, expiration);
+    const { userData, token } = await getAccessToken(socialToken, social, regData);
+    setGuestAccessToken(token);
     setGuestName(userData.name);
 
     return { userData, token };

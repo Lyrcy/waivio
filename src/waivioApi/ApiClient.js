@@ -4,10 +4,15 @@ import fetch from 'isomorphic-fetch';
 import Cookie from 'js-cookie';
 import { isEmpty } from 'lodash';
 import config from './routes';
-import { getValidTokenData } from '../client/helpers/getToken';
 import { ACCOUNT_UPDATE, CUSTOM_JSON } from '../common/constants/accountHistory';
 import { message } from 'antd';
 import { getUrl } from '../client/rewards/rewardsHelper';
+import {
+  getGuestAccessToken,
+  getGuestUserName,
+  removeGuestAuthData,
+  setGuestAccessToken,
+} from '../client/helpers/localStorageHelpers';
 
 let headers = {
   Accept: 'application/json',
@@ -840,8 +845,7 @@ export const updateUserMetadata = async (userName, data) => {
   }
 
   if (isGuest) {
-    const token = await getValidTokenData();
-    headers = { ...headers, 'access-token': token.token, 'waivio-auth': true };
+    headers = { ...headers, 'access-token': getGuestAccessToken(), 'waivio-auth': true };
   } else {
     headers = { ...headers, 'access-token': Cookie.get('access_token') };
   }
@@ -908,29 +912,40 @@ export const isUserRegistered = (id, socialNetwork) => {
 };
 
 export const broadcastGuestOperation = async (operationId, isReview, data) => {
-  const userData = await getValidTokenData();
-  if (userData.token) {
+  const accessToken = getGuestAccessToken();
+  const guestName = getGuestUserName();
+  if (accessToken) {
     let body;
     if (isReview) {
       body = {
         id: operationId,
         data: { operations: data },
-        userName: userData.userData.name,
+        userName: guestName,
         guestReview: true,
       };
     } else {
       body = {
         id: operationId,
         data: { operations: data },
-        userName: userData.userData.name,
+        userName: guestName,
       };
     }
 
     return fetch(`${config.baseUrl}${config.auth}${config.guestOperations}`, {
       method: 'POST',
-      headers: { ...headers, 'access-token': userData.token },
+      headers: { ...headers, 'access-token': accessToken },
       body: JSON.stringify(body),
-    }).then(data => data);
+    }).then(data => {
+      if (data.status === 401) {
+        removeGuestAuthData();
+        window.location.replace(window.location.origin);
+      }
+      const token = data.headers.get('access-token');
+      if (token) {
+        setGuestAccessToken(token);
+      }
+      return data;
+    });
   }
 };
 //endregion
@@ -1010,10 +1025,9 @@ export const updateGuestProfile = async (username, json_metadata) => {
       ],
     },
   };
-  const userData = await getValidTokenData();
   return fetch(`${config.baseUrl}${config.auth}${config.guestOperations}`, {
     method: 'POST',
-    headers: { ...headers, 'access-token': userData.token },
+    headers: { ...headers, 'access-token': getGuestAccessToken() },
     body: JSON.stringify(body),
   })
     .then(data => data)
@@ -1021,7 +1035,6 @@ export const updateGuestProfile = async (username, json_metadata) => {
 };
 
 export const sendGuestTransfer = async ({ to, amount, memo }) => {
-  const userData = await getValidTokenData();
   const body = {
     id: 'waivio_guest_transfer',
     data: { to, amount: +amount.split(' ')[0] },
@@ -1029,7 +1042,7 @@ export const sendGuestTransfer = async ({ to, amount, memo }) => {
   if (memo) body.data.memo = memo;
   return fetch(`${config.baseUrl}${config.auth}${config.guestOperations}`, {
     method: 'POST',
-    headers: { ...headers, 'access-token': userData.token },
+    headers: { ...headers, 'access-token': getGuestAccessToken() },
     body: JSON.stringify(body),
   })
     .then(res => res.json())

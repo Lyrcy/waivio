@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import sc2 from 'sc2-sdk';
 import { waivioAPI } from '../waivioApi/ApiClient';
-import { getValidTokenData } from './helpers/getToken';
+import { getGuestUserName } from './helpers/localStorageHelpers';
 
 function broadcast(operations, isReview, actionAuthor) {
   let operation;
@@ -26,8 +26,8 @@ function broadcast(operations, isReview, actionAuthor) {
 }
 
 async function getUserAccount() {
-  const userData = await getValidTokenData();
-  const account = await waivioAPI.getUserAccount(userData.userData.name, true);
+  const guestName = getGuestUserName();
+  const account = await waivioAPI.getUserAccount(guestName, true);
   return { account, name: account.name };
 }
 
