@@ -895,27 +895,6 @@ export const getAccessToken = (token, social, regData) => {
     .catch(err => err);
 };
 
-export const getNewToken = token => {
-  let response = {};
-  return fetch(`${config.baseUrl}${config.auth}/${config.validateAuthToken}`, {
-    method: 'POST',
-    headers: { 'access-token': token },
-  })
-    .then(data => {
-      response.token = data.headers.get('access-token');
-      response.expiration = data.headers.get('expires-in');
-      response.status = data.status;
-      return data.json();
-    })
-    .then(data => {
-      response.userData = data.user;
-      return response;
-    })
-    .catch(e => {
-      console.error(e.message);
-    });
-};
-
 export const isUserNameVacant = userName => {
   return fetch(`${config.baseUrl}${config.user}/${userName}`);
 };
