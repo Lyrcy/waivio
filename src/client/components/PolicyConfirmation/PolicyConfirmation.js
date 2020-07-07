@@ -23,7 +23,7 @@ PolicyConfirmation.propTypes = {
   isChecked: PropTypes.bool.isRequired,
   disabled: PropTypes.bool,
   checkboxLabel: PropTypes.string,
-  policyText: PropTypes.string,
+  policyText: PropTypes.shape(),
   className: PropTypes.string,
   onChange: PropTypes.func.isRequired,
 };
@@ -31,7 +31,7 @@ PolicyConfirmation.propTypes = {
 PolicyConfirmation.defaultProps = {
   disabled: false,
   checkboxLabel: 'Checkbox',
-  policyText: '',
+  policyText: {},
   className: '',
 };
 

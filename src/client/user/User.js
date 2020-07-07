@@ -111,30 +111,27 @@ export default class User extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const diffUsername = this.props.match.params.name !== nextProps.match.params.name;
-    const diffAuthUsername = this.props.authenticatedUserName !== nextProps.authenticatedUserName;
-    if (diffUsername || diffAuthUsername) {
-      currentUserFollowersUser(nextProps.authenticatedUserName, nextProps.match.params.name).then(
-        resp => {
-          const result = head(resp);
-          const followingUsername = get(result, 'following', null);
-          const isFollowing = nextProps.authenticatedUserName === followingUsername;
-          this.setState({
-            isFollowing,
-          });
-        },
-      );
-    }
-  }
-
   componentDidUpdate(prevProps) {
+    // 15
+    // 10
+    const { match, authenticatedUserName } = this.props;
+    const diffUserName = prevProps.match.params.name !== match.params.name;
+    const diffAuthUserName = prevProps.authenticatedUserName !== authenticatedUserName;
+
     if (
-      prevProps.match.params.name !== this.props.match.params.name ||
-      (!prevProps.authenticatedUserName && this.props.authenticatedUserName) ||
-      (prevProps.match.url.includes('follow') && !this.props.match.url.includes('follow'))
+      diffUserName ||
+      diffAuthUserName ||
+      (prevProps.match.url.includes('follow') && !match.url.includes('follow'))
     ) {
-      this.props.getUserAccount(this.props.match.params.name);
+      this.props.getUserAccount(match.params.name);
+      currentUserFollowersUser(authenticatedUserName, match.params.name).then(resp => {
+        const result = head(resp);
+        const followingUsername = get(result, 'following', null);
+        const isFollowing = authenticatedUserName === followingUsername;
+        this.setState({
+          isFollowing,
+        });
+      });
     }
   }
 
@@ -143,6 +140,8 @@ export default class User extends React.Component {
   };
 
   render() {
+    console.log('user', this.props.user);
+
     const {
       authenticated,
       authenticatedUser,
