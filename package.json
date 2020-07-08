@@ -119,6 +119,7 @@
     "redux-promise-middleware": "^6.1.1",
     "redux-thunk": "^2.3.0",
     "remarkable": "1.7.1",
+    "reselect": "^4.0.0",
     "resize-observer-polyfill": "^1.4.2",
     "sanitize-html": "1.15.0",
     "sc2-sdk": "1.0.2",

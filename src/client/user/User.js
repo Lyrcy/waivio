@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { Helmet } from 'react-helmet';
-import { get, head, isEmpty } from 'lodash';
+import {
+  get,
+  head,
+  isEmpty,
+  // isEqual,
+} from 'lodash';
 import classNames from 'classnames';
 import { currentUserFollowersUser } from '../helpers/apiHelpers';
 import {
-  getAllUsers,
+  // getAllUsers,
   getAuthenticatedUser,
   getAuthenticatedUserName,
   getIsAuthenticated,
@@ -42,7 +47,7 @@ import { BXY_GUEST_PREFIX, GUEST_PREFIX } from '../../common/constants/waivio';
     usersAccountHistory: getUsersAccountHistory(state),
     rewardFund: getRewardFund(state),
     rate: getRate(state),
-    allUsers: getAllUsers(state), // DO NOT DELETE! Auxiliary selector. Without it, "user" is not always updated
+    // allUsers: getAllUsers(state), // DO NOT DELETE! Auxiliary selector. Without it, "user" is not always updated
   }),
   {
     getUserAccount,
@@ -80,9 +85,13 @@ export default class User extends React.Component {
     return store.dispatch(getUserAccount(match.params.name));
   }
 
-  state = {
-    isFollowing: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isFollowing: false,
+    };
+  }
 
   componentDidMount() {
     const {
@@ -111,9 +120,16 @@ export default class User extends React.Component {
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   console.log('user', nextProps.user);
+  //   console.log(isEqual(this.props.user, nextProps.user));
+  // }
+
+  // shouldComponentUpdate(nextProps) {
+  //   return !isEqual(this.props.user, nextProps.user);
+  // }
+
   componentDidUpdate(prevProps) {
-    // 15
-    // 10
     const { match, authenticatedUserName } = this.props;
     const diffUserName = prevProps.match.params.name !== match.params.name;
     const diffAuthUserName = prevProps.authenticatedUserName !== authenticatedUserName;
@@ -140,8 +156,6 @@ export default class User extends React.Component {
   };
 
   render() {
-    console.log('user', this.props.user);
-
     const {
       authenticated,
       authenticatedUser,

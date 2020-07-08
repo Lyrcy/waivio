@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import { createSelector } from 'reselect';
 import * as actions from './usersActions';
 import { GET_USER_ACCOUNT_HISTORY } from '../wallet/walletActions';
 
@@ -325,13 +326,52 @@ export default function usersReducer(state = initialState, action) {
 }
 
 export const getAllUsers = state => get(state, 'users', {});
-export const getUser = (state, username) => get(state, ['users', username], {});
-export const getIsUserFetching = (state, username) => getUser(state, username).fetching || false;
-export const getIsUserLoaded = (state, username) => getUser(state, username).loaded || false;
-export const getIsUserFailed = (state, username) => getUser(state, username).failed || false;
-export const getTopExperts = state => state.topExperts.list;
-export const getTopExpertsLoading = state => state.topExperts.isFetching;
-export const getTopExpertsHasMore = state => state.topExperts.hasMore;
-export const getRandomExperts = state => state.randomExperts.list;
-export const getRandomExpertsLoaded = state => state.randomExperts.fetched;
-export const getRandomExpertsLoading = state => state.randomExperts.isFetching;
+export const getUser = createSelector(
+  getAllUsers,
+  (state, props) => props,
+  (users, username) => {
+    const user = get(users, username, {});
+    console.log('getUser', user);
+    return user;
+  },
+);
+// export const getUser = (state, username) => {
+//   const all = getAllUsers(state);
+//   const user = get(all, [username], {});
+//   // console.log(all);
+//   return user;
+// }
+export const getIsUserFetching = createSelector([getUser], user => get(user, 'fetching', false));
+// export const getIsUserFetching = (state, username) => getUser(state, username).fetching || false;
+export const getIsUserLoaded = createSelector([getUser], user => get(user, 'loaded', false));
+// export const getIsUserLoaded = (state, username) => getUser(state, username).loaded || false;
+export const getIsUserFailed = createSelector([getUser], user => get(user, 'failed', false));
+// export const getIsUserFailed = (state, username) => getUser(state, username).failed || false;
+
+export const getTopExpertsFields = state => state.topExperts;
+export const getTopExperts = createSelector([getTopExpertsFields], topExperts =>
+  get(topExperts, 'list'),
+);
+// export const getTopExperts = state => state.topExperts.list;
+export const getTopExpertsLoading = createSelector([getTopExpertsFields], topExperts =>
+  get(topExperts, 'isFetching', false),
+);
+// export const getTopExpertsLoading = state => state.topExperts.isFetching;
+export const getTopExpertsHasMore = createSelector([getTopExpertsFields], topExperts =>
+  get(topExperts, 'hasMore', false),
+);
+// export const getTopExpertsHasMore = state => state.topExperts.hasMore;
+
+const getRandomExpertsFields = state => state.randomExperts;
+export const getRandomExperts = createSelector([getRandomExpertsFields], randomExperts =>
+  get(randomExperts, 'list'),
+);
+// export const getRandomExperts = state => state.randomExperts.list;
+export const getRandomExpertsLoaded = createSelector([getRandomExpertsFields], randomExperts =>
+  get(randomExperts, 'fetched', false),
+);
+// export const getRandomExpertsLoaded = state => state.randomExperts.fetched;
+export const getRandomExpertsLoading = createSelector([getRandomExpertsFields], randomExperts =>
+  get(randomExperts, 'isFetching', false),
+);
+// export const getRandomExpertsLoading = state => state.randomExperts.isFetching;
