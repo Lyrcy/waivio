@@ -308,6 +308,15 @@ function mdToDraftjs({ title, body } = { title: '', body: '' }, withTitle = true
       data: {},
     });
   }
+  blocks.push({
+    key: 'empty_block',
+    text: '',
+    type: Block.UNSTYLED,
+    depth: 0,
+    inlineStyleRanges: [],
+    entityRanges: [],
+    data: {},
+  });
   return {
     blocks,
     entityMap,
