@@ -1,7 +1,7 @@
 import { List, Map } from 'immutable';
-
 import { ContentBlock, EditorState, genKey } from 'draft-js';
 import { Block, Entity } from '../util/constants';
+import { moveSelectionToEnd } from './content';
 
 /*
 Returns default block-level metadata for various block type. Empty object otherwise.
@@ -52,7 +52,9 @@ export const addNewBlock = (editorState, newType = Block.UNSTYLED, initialData =
       blockMap: blockMap.set(key, newBlock),
       selectionAfter: selectionState,
     });
-    return EditorState.push(editorState, newContentState, 'change-block-type');
+    console.log('newContentState: ', newContentState);
+    const newEditorState = EditorState.push(editorState, newContentState, 'change-block-type');
+    return moveSelectionToEnd(newEditorState);
   }
   return editorState;
 };
@@ -130,7 +132,13 @@ export const addNewBlockAt = (
   });
 
   const newBlockMap = blocksBefore
-    .concat([[pivotBlockKey, block], [newBlockKey, newBlock]], blocksAfter)
+    .concat(
+      [
+        [pivotBlockKey, block],
+        [newBlockKey, newBlock],
+      ],
+      blocksAfter,
+    )
     .toOrderedMap();
 
   const selection = editorState.getSelection();

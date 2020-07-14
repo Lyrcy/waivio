@@ -1,4 +1,10 @@
-import { EditorState, convertFromRaw, CompositeDecorator, ContentState } from 'draft-js';
+import {
+  EditorState,
+  convertFromRaw,
+  CompositeDecorator,
+  ContentState,
+  SelectionState,
+} from 'draft-js';
 
 import Link, { findLinkEntities } from '../components/entities/link';
 import ObjectLink, { findObjEntities } from '../components/entities/objectlink';
@@ -26,8 +32,21 @@ const createEditorState = (content = null, decorators = defaultDecorators) => {
     contentState = convertFromRaw(content);
   }
   initialEditorState = EditorState.createWithContent(contentState, decorators);
-  // return EditorState.moveSelectionToEnd(initialEditorState);
   return initialEditorState;
 };
 
 export default createEditorState;
+
+export const moveSelectionToEnd = editorState => {
+  const content = editorState.getCurrentContent();
+  const blockMap = content.getBlockMap();
+  const key = blockMap.last().getKey();
+  const length = blockMap.last().getLength();
+  const selection = new SelectionState({
+    anchorKey: key,
+    anchorOffset: length,
+    focusKey: key,
+    focusOffset: length,
+  });
+  return EditorState.acceptSelection(editorState, selection);
+};
