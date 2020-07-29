@@ -4,6 +4,7 @@ import Wrapper from '../client/Wrapper';
 import Page from '../client/feed/Page';
 import Loading from '../client/components/Icon/Loading';
 import Post from '../client/post/Post';
+import Editor from '../client/post/EditPost/EditPost';
 
 const Bookmarks = Loadable({
   loader: () => import('../client/bookmarks/Bookmarks'),
@@ -29,10 +30,10 @@ const BusyEditor = Loadable({
   loader: () => import('../client/post/Write/Write'),
   loading: Loading,
 });
-const Editor = Loadable({
-  loader: () => import('../client/post/EditPost/EditPost'),
-  loading: Loading,
-});
+// const Editor = Loadable({
+//   loader: () => import('../client/post/EditPost/EditPost'),
+//   loading: Loading,
+// });
 const Settings = Loadable({
   loader: () => import('../client/settings/Settings'),
   loading: Loading,

@@ -116,6 +116,8 @@ export default class MediumDraftEditor extends React.Component {
     intl: {},
   };
 
+  static MAX_LENGTH = 5;
+
   constructor(props) {
     super(props);
 
@@ -452,6 +454,19 @@ export default class MediumDraftEditor extends React.Component {
   This function is responsible for emitting various commands based on various key combos.
   */
   handleBeforeInput(str) {
+    const currentSelection = this.props.editorState.getSelection();
+
+    if (currentSelection.getAnchorKey() === 's_title') {
+      const currentContent = this.props.editorState.getCurrentContent();
+      const currentContentLength = currentContent.getPlainText('').length;
+      console.log(currentContentLength);
+      if (currentContentLength > MediumDraftEditor.MAX_LENGTH) {
+        console.log('you can type max ten characters(handleBeforeInput)');
+
+        return 'handled';
+      }
+    }
+
     return this.props.beforeInput(
       this.props.editorState,
       str,
@@ -459,6 +474,43 @@ export default class MediumDraftEditor extends React.Component {
       this.props.stringToTypeMap,
     );
   }
+
+  /**
+   * Handle pasting when cursor is in an image block. Paste the text as the
+   * caption. Otherwise, let Draft do its thing.
+   */
+  handlePastedText = (text, html, es) => {
+    const currentBlock = getCurrentBlock(this.props.editorState);
+    const currentSelection = this.props.editorState.getSelection();
+
+    if (currentBlock.getType() === Block.IMAGE) {
+      const { editorState } = this.props;
+      const content = editorState.getCurrentContent();
+      this.onChange(
+        EditorState.push(
+          editorState,
+          Modifier.insertText(content, editorState.getSelection(), text),
+        ),
+      );
+
+      return HANDLED;
+    }
+
+    if (currentSelection.getAnchorKey() === 's_title') {
+      const currentContent = this.props.editorState.getCurrentContent();
+      const currentContentLength = currentContent.getPlainText('').length;
+      if (currentContentLength + text.length > MediumDraftEditor.MAX_LENGTH) {
+        console.log('you can type max ten characters (handlePastedText)');
+
+        return HANDLED;
+      }
+    }
+
+    if (this.props.handlePastedText && this.props.handlePastedText(text, html, es) === HANDLED) {
+      return HANDLED;
+    }
+    return NOT_HANDLED;
+  };
 
   /*
   By default, it handles return key for inserting soft breaks (BRs in HTML) and
@@ -594,30 +646,6 @@ export default class MediumDraftEditor extends React.Component {
         }, 100);
       },
     );
-  };
-
-  /**
-   * Handle pasting when cursor is in an image block. Paste the text as the
-   * caption. Otherwise, let Draft do its thing.
-   */
-  handlePastedText = (text, html, es) => {
-    const currentBlock = getCurrentBlock(this.props.editorState);
-    if (currentBlock.getType() === Block.IMAGE) {
-      const { editorState } = this.props;
-      const content = editorState.getCurrentContent();
-      this.onChange(
-        EditorState.push(
-          editorState,
-          Modifier.insertText(content, editorState.getSelection(), text),
-        ),
-      );
-
-      return HANDLED;
-    }
-    if (this.props.handlePastedText && this.props.handlePastedText(text, html, es) === HANDLED) {
-      return HANDLED;
-    }
-    return NOT_HANDLED;
   };
 
   /*

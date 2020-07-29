@@ -255,6 +255,7 @@ const parseMdLine = (line, existingEntities, extraStyles = {}) => {
 
 function mdToDraftjs({ title, body } = { title: '', body: '' }, withTitle = true, extraStyles) {
   const blocks = [];
+  console.log(title);
   if (withTitle) {
     blocks.push({
       key: 's_title',

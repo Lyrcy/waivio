@@ -160,7 +160,6 @@ class Wrapper extends React.PureComponent {
         this.props.dispatchGetAuthGuestBalance();
       });
     });
-
     batch(() => {
       this.props.getRewardFund();
       this.props.getRebloggedList();
