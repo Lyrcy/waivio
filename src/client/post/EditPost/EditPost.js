@@ -4,7 +4,19 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { Badge } from 'antd';
-import { debounce, get, has, kebabCase, throttle, uniqBy, isEmpty, includes } from 'lodash';
+import {
+  debounce,
+  get,
+  has,
+  kebabCase,
+  throttle,
+  uniqBy,
+  isEmpty,
+  includes,
+  uniqWith,
+  concat,
+  isEqual,
+} from 'lodash';
 import requiresLogin from '../../auth/requiresLogin';
 import { getCampaignById } from '../../../waivioApi/ApiClient';
 import {
@@ -154,7 +166,10 @@ class EditPost extends Component {
 
   handleChangeContent(rawContent) {
     const nextState = { content: toMarkdown(rawContent) };
-    const linkedObjects = getLinkedObjects(rawContent);
+    const linkedObjects = uniqWith(
+      concat(this.state.linkedObjects, getLinkedObjects(rawContent)),
+      isEqual,
+    );
     const isLinkedObjectsChanged = this.state.linkedObjects.length !== linkedObjects.length;
     if (isLinkedObjectsChanged) {
       const objPercentage = setObjPercents(linkedObjects, this.state.objPercentage);
