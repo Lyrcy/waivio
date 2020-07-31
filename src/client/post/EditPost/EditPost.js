@@ -16,6 +16,8 @@ import {
   uniqWith,
   concat,
   isEqual,
+  find,
+  indexOf,
 } from 'lodash';
 import requiresLogin from '../../auth/requiresLogin';
 import { getCampaignById } from '../../../waivioApi/ApiClient';
@@ -203,8 +205,11 @@ class EditPost extends Component {
     this.props.createPost(postData, this.props.beneficiaries, isReview);
   }
 
-  handleToggleLinkedObject(objId, isLinked) {
+  handleToggleLinkedObject(objId, isLinked, uniqId) {
     const { linkedObjects, objPercentage } = this.state;
+    const currentObj = find(linkedObjects, { _id: uniqId });
+    const switchableObj = indexOf(linkedObjects, currentObj);
+    linkedObjects.splice(switchableObj, 1);
     const updPercentage = {
       ...objPercentage,
       [objId]: { percent: isLinked ? 33 : 0 }, // 33 - just non zero value
