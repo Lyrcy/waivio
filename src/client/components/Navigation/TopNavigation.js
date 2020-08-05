@@ -48,10 +48,10 @@ const TopNavigation = ({ location: { pathname } }) => {
   const tabType = useSelector(getTabType);
   const newTabType = useMemo(() => (tabType === 'eligible' ? 'active' : tabType), [tabType]);
   useEffect(() => {
-    if (authenticatedUser) {
+    if (!isEmpty(authenticatedUser)) {
       dispatch(getRewardsGeneralCounts({ userName: authenticatedUser.name }));
     }
-  }, []);
+  }, [authenticatedUser]);
   const isRouteMathed =
     pathname === '/' || Object.values(LINKS).some(url => pathname.includes(url));
   return isRouteMathed ? (

@@ -64,8 +64,10 @@ const RewardsComponent = memo(
         getPropositionsByStatus({ username, sort });
       } else if (username) {
         getPropositions({ username, match, area: areaRewards, sort, activeFilters });
+      } else if (url && !username && match.params.filterKey !== 'all') {
+        history.push(`/rewards/all`);
       }
-    }, [JSON.stringify(activeFilters)]);
+    }, [JSON.stringify(activeFilters), username, url]);
 
     useEffect(() => {
       if (!prevFilterKeyParams.current || prevFilterKeyParams.current === 'undefined') {
@@ -83,13 +85,6 @@ const RewardsComponent = memo(
         });
       }
     }, [campaignParent, filterKeyParams, prevFilterKeyParams]);
-
-    useEffect(() => {
-      if (campaignParent) return;
-      if (!username && match.params.filterKey !== 'all') {
-        history.push(`/rewards/all`);
-      }
-    }, [username]);
 
     return (
       <div className="Rewards">

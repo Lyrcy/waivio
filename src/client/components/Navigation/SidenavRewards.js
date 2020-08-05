@@ -99,26 +99,23 @@ export default class SidenavRewards extends React.Component {
               )}
             </div>
           </div>
-          {menuCondition.rewards && (
-            <React.Fragment>
-              <li>
-                <NavLink
-                  to={'/rewards/all'}
-                  className="sidenav-discover-objects__item"
-                  activeClassName="Sidenav__item--active"
-                >
-                  {intl.formatMessage({
-                    id: 'all',
-                    defaultMessage: `All`,
-                  })}
-                </NavLink>
-              </li>
-            </React.Fragment>
-          )}
           {authenticated ? (
             <React.Fragment>
               {menuCondition.rewards && (
                 <React.Fragment>
+                  <li>
+                    <NavLink
+                      to={'/rewards/all'}
+                      className="sidenav-discover-objects__item"
+                      activeClassName="Sidenav__item--active"
+                    >
+                      {intl.formatMessage({
+                        id: 'all',
+                        defaultMessage: `All`,
+                      })}
+                    </NavLink>
+                  </li>
+
                   <li>
                     <NavLink
                       to={`/rewards/active`}
@@ -301,13 +298,29 @@ export default class SidenavRewards extends React.Component {
               )}
             </React.Fragment>
           ) : (
-            <span className="tc">
-              {intl.formatMessage({
-                id: 'pleaseLogin',
-                defaultMessage: `For more options please`,
-              })}{' '}
-              <ModalSignIn isButton={false} />
-            </span>
+            <React.Fragment>
+              {menuCondition.rewards && (
+                <li>
+                  <NavLink
+                    to={'/rewards/all'}
+                    className="sidenav-discover-objects__item"
+                    activeClassName="Sidenav__item--active"
+                  >
+                    {intl.formatMessage({
+                      id: 'all',
+                      defaultMessage: `All`,
+                    })}
+                  </NavLink>
+                </li>
+              )}
+              <span className="tc">
+                {intl.formatMessage({
+                  id: 'pleaseLogin',
+                  defaultMessage: `For more options please`,
+                })}
+                <ModalSignIn isButton={false} />
+              </span>
+            </React.Fragment>
           )}
         </ul>
       </React.Fragment>
