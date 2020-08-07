@@ -239,7 +239,7 @@ class CampaignFooter extends React.Component {
   };
 
   render() {
-    const { commentsVisible, modalVisible, daysLeft, sliderVisible } = this.state;
+    const { commentsVisible, modalVisible, isComment, daysLeft, sliderVisible } = this.state;
     const {
       post,
       postState,
@@ -271,9 +271,11 @@ class CampaignFooter extends React.Component {
     const hasComments = !isEmpty(proposition.conversation);
     const commentsAll = get(postCurrent, ['all']);
     const rootKey = findKey(commentsAll, ['depth', 2]);
+    const rootComment = get(commentsAll, [rootKey]);
     const repliesKeys = get(commentsAll, [rootKey, 'replies']);
     const commentsArr = map(repliesKeys, key => get(commentsAll, [key]));
     const numberOfComments = commentsArr.length;
+    const isReservedPage = match.params.filterKey === 'reserved';
 
     return (
       <div className="CampaignFooter">
@@ -329,13 +331,22 @@ class CampaignFooter extends React.Component {
               />
             </div>
           ))}
-        {!singlePostVew && (
+        {!singlePostVew && isComment && !hasComments && isReservedPage && (
+          <Comments
+            show={commentsVisible}
+            isQuickComments={!singlePostVew}
+            post={rootComment}
+            getMessageHistory={getMessageHistory}
+          />
+        )}
+        {!isReservedPage && (
           <Comments
             show={commentsVisible}
             isQuickComments={!singlePostVew}
             post={this.state.currentPost}
           />
         )}
+
         <Modal
           closable
           maskClosable={false}
