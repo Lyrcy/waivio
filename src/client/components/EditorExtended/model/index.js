@@ -96,6 +96,82 @@ export const updateDataOfBlock = (editorState, block, newData) => {
   return EditorState.push(editorState, newContentState, 'change-block-data');
 };
 
+export const addMultipleImages = (editorState, newBlockType, initialData) => {
+  const selectionState = editorState.getSelection();
+  const content = editorState.getCurrentContent();
+  const key = selectionState.getStartKey();
+  const selection = editorState.getSelection();
+
+  let newContent = content.merge({
+    blockMap: {},
+    selectionAfter: {},
+    selectionBefore: selection.merge({
+      anchorKey: '',
+      anchorOffset: 0,
+      focusKey: '',
+      focusOffset: 0,
+      isBackward: false,
+    }),
+  });
+  // let state = {};
+
+  initialData.forEach(data => {
+    const blockMap = content.getBlockMap();
+    const block = blockMap.get(key);
+    if (!block) {
+      throw new Error(`The pivot key - ${key} is not present in blockMap.`);
+    }
+
+    const blocksBefore = blockMap.toSeq().takeUntil(v => v === block);
+    const blocksAfter = blockMap
+      .toSeq()
+      .skipUntil(v => v === block)
+      .rest();
+
+    const newBlockKey = genKey();
+
+    const newBlock = new ContentBlock({
+      key: newBlockKey,
+      type: newBlockType,
+      text: '',
+      characterList: List(),
+      depth: 0,
+      data: Map(getDefaultBlockData(newBlockType, data)),
+    });
+
+    const newBlockMap = blocksBefore
+      .concat(
+        [
+          [key, block],
+          [newBlockKey, newBlock],
+        ],
+        blocksAfter,
+      )
+      .toOrderedMap();
+
+    console.log('newBlockMap: ', newBlockMap);
+    console.log('newBlock: ', newBlock);
+
+    newContent = content.merge({
+      blockMap: newBlockMap,
+      selectionAfter: selection,
+      selectionBefore: selection.merge({
+        anchorKey: newBlockKey,
+        anchorOffset: 0,
+        focusKey: newBlockKey,
+        focusOffset: 0,
+        isBackward: false,
+      }),
+    });
+    // state = EditorState.push(editorState, newContent, 'split-block');
+    // console.log('newState: ', state._immutable.currentContent.blockMap._list._tail.array)
+  });
+  console.log('addMultipleImages: ', newContent);
+
+  // console.log('state: ', state)
+  return editorState;
+};
+
 // const BEFORE = -1;
 // const AFTER = 1;
 
@@ -115,6 +191,7 @@ export const addNewBlockAt = (
   if (!block) {
     throw new Error(`The pivot key - ${pivotBlockKey} is not present in blockMap.`);
   }
+
   const blocksBefore = blockMap.toSeq().takeUntil(v => v === block);
   const blocksAfter = blockMap
     .toSeq()
@@ -154,6 +231,7 @@ export const addNewBlockAt = (
       isBackward: false,
     }),
   });
+  console.log('addNewBlockAt: ', newContent);
   return EditorState.push(editorState, newContent, 'split-block');
 };
 

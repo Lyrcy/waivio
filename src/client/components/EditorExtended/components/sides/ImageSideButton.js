@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { Icon, Modal } from 'antd';
-import { addNewBlock } from '../../model';
+import { addMultipleImages, addNewBlockAt } from '../../model';
 import { Block } from '../..';
 import ImageSetter from '../../../ImageSetter/ImageSetter';
 import withEditor from '../../../Editor/withEditor';
@@ -35,14 +35,21 @@ export default class ImageSideButton extends React.Component {
   }
 
   handleOnOk = () => {
-    if (this.state.currentImage.length) {
+    const selection = this.props.getEditorState().getSelection();
+    const key = selection.getAnchorKey();
+    if (this.state.currentImage.length === 1) {
       const image = this.state.currentImage[0];
       this.props.setEditorState(
-        addNewBlock(this.props.getEditorState(), Block.IMAGE, {
+        addNewBlockAt(this.props.getEditorState(), key, Block.IMAGE, {
           // fix for issue with loading large images to digital-ocean
           src: `${image.src.startsWith('http') ? image.src : `https://${image.src}`}`,
           alt: image.name,
         }),
+      );
+    } else {
+      const images = this.state.currentImage;
+      this.props.setEditorState(
+        addMultipleImages(this.props.getEditorState(), Block.IMAGE, images, true),
       );
     }
     this.props.close();
