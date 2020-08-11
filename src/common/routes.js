@@ -432,52 +432,52 @@ const routes = [
         ],
       },
       {
-        path: `/object/:name/(${URL.WOBJ.params[0]})?/(${URL.WOBJ.params[1]})?/:itemId?`,
+        path: `/${URL.WOBJ.BASE}/:name/(${URL.WOBJ.params[0]})?/(${URL.WOBJ.params[1]})?/:itemId?`,
         component: Wobj,
         exact: true,
         routes: [
           {
-            path: '/object/:name',
+            path: `/${URL.WOBJ.BASE}/:name`,
             exact: true,
             component: ObjectPageFeed,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.ABOUT}`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.ABOUT}`,
             exact: true,
             component: ObjectAbout,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.FOLLOWERS}`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.FOLLOWERS}`,
             exact: true,
             component: WobjFollowers,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.GALLERY}`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.GALLERY}`,
             exact: true,
             component: ObjectGallery,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.EXPERTISE}`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.EXPERTISE}`,
             exact: true,
             component: WobjExpertise,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.GALLERY}/${URL.SEGMENT.ALBUM}/:itemId`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.GALLERY}/${URL.SEGMENT.ALBUM}/:itemId`,
             exact: true,
             component: ObjectGalleryAlbum,
           },
           {
-            path: `/object/:name/${URL.SEGMENT.UPDATES}/(${URL.WOBJ.params[1]})?`,
+            path: `/${URL.WOBJ.BASE}/:name/${URL.SEGMENT.UPDATES}/(${URL.WOBJ.params[1]})?`,
             exact: true,
             component: WobjHistory,
           },
           {
-            path: `/object/:name/(${URL.SEGMENT.LIST}|${URL.SEGMENT.MENU})`,
+            path: `/${URL.WOBJ.BASE}/:name/(${URL.SEGMENT.LIST}|${URL.SEGMENT.MENU})`,
             exact: true,
             component: CatalogWrap,
           },
           {
-            path: `/object/:name/(${URL.SEGMENT.PAGE})`,
+            path: `/${URL.WOBJ.BASE}/:name/(${URL.SEGMENT.PAGE})`,
             exact: true,
             component: ObjectOfTypePage,
           },
@@ -486,7 +486,6 @@ const routes = [
 
       {
         path: '/discover/:search?',
-        exact: true,
         component: Discover,
       },
       {
@@ -512,7 +511,6 @@ const routes = [
         routes: [
           {
             path: '/confirmation',
-            exact: true,
             component: ConfirmationModal,
           },
           {

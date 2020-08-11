@@ -43,6 +43,7 @@ import { getApprovedField } from '../../helpers/wObjectHelper';
 import { pendingSearch } from '../../search/Search';
 
 import './Topnav.less';
+import { logout } from '../../auth/authActions';
 
 @injectIntl
 @withRouter
@@ -58,6 +59,7 @@ import './Topnav.less';
     isStartSearchAutoComplete: getIsStartSearchAutoComplete(state),
   }),
   {
+    logout,
     searchObjectsAutoCompete,
     searchAutoComplete,
     getUserMetadata,
@@ -72,6 +74,7 @@ class Topnav extends React.Component {
     intl: PropTypes.shape().isRequired,
     history: PropTypes.shape().isRequired,
     location: PropTypes.shape().isRequired,
+    logout: PropTypes.func.isRequired,
     /* from connect */
     autoCompleteSearchResults: PropTypes.oneOfType([
       PropTypes.shape(),
@@ -85,7 +88,6 @@ class Topnav extends React.Component {
     resetSearchAutoCompete: PropTypes.func.isRequired,
     /* passed props */
     username: PropTypes.string,
-    onMenuItemClick: PropTypes.func,
     searchObjectsAutoCompete: PropTypes.func.isRequired,
     searchUsersAutoCompete: PropTypes.func.isRequired,
     searchObjectTypesAutoCompete: PropTypes.func.isRequired,
@@ -101,7 +103,6 @@ class Topnav extends React.Component {
     searchByObjectType: [],
     notifications: [],
     username: undefined,
-    onMenuItemClick: () => {},
     userMetaData: {},
     loadingNotifications: false,
     isStartSearchAutoComplete: false,
@@ -191,6 +192,46 @@ class Topnav extends React.Component {
     return countArr;
   };
 
+  handleMenuItemClick(key) {
+    switch (key) {
+      case 'logout':
+        this.props.logout();
+        break;
+      case 'activity':
+        this.props.history.push('/activity');
+        break;
+      case 'replies':
+        this.props.history.push('/replies');
+        break;
+      case 'bookmarks':
+        this.props.history.push('/bookmarks');
+        break;
+      case 'drafts':
+        this.props.history.push('/drafts');
+        break;
+      case 'settings':
+        this.props.history.push('/settings');
+        break;
+      case 'feed':
+        this.props.history.push('/');
+        break;
+      case 'news':
+        this.props.history.push('/trending');
+        break;
+      case 'objects':
+        this.props.history.push('/objects');
+        break;
+      case 'wallet':
+        this.props.history.push('/wallet');
+        break;
+      case 'my-profile':
+        this.props.history.push(`/@${this.props.username}`);
+        break;
+      default:
+        break;
+    }
+  }
+
   debouncedSearch = debounce(value => this.props.searchAutoComplete(value, 3, 15), 300);
 
   debouncedSearchByObject = debounce(
@@ -210,7 +251,7 @@ class Topnav extends React.Component {
 
   handleMoreMenuSelect(key) {
     this.setState({ popoverVisible: false }, () => {
-      this.props.onMenuItemClick(key);
+      this.handleMenuItemClick(key);
     });
   }
 

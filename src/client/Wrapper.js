@@ -24,7 +24,6 @@ import {
 } from './reducers';
 import {
   login,
-  logout,
   busyLogin,
   getAuthGuestBalance as dispatchGetAuthGuestBalance,
 } from './auth/authActions';
@@ -62,7 +61,6 @@ export const AppSharedContext = React.createContext({ usedLocale: 'en-US', isGue
   }),
   {
     login,
-    logout,
     getFollowing,
     getFollowingObjects,
     getNotifications,
@@ -84,8 +82,7 @@ class Wrapper extends React.PureComponent {
     usedLocale: PropTypes.string,
     translations: PropTypes.shape(),
     username: PropTypes.string,
-    login: PropTypes.func,
-    logout: PropTypes.func,
+    login: PropTypes.func.isRequired,
     getFollowing: PropTypes.func,
     getFollowingObjects: PropTypes.func,
     getRewardFund: PropTypes.func,
@@ -104,8 +101,6 @@ class Wrapper extends React.PureComponent {
     usedLocale: null,
     translations: {},
     username: '',
-    login: () => {},
-    logout: () => {},
     getFollowing: () => {},
     getFollowingObjects: () => {},
     getRewardFund: () => {},
@@ -141,9 +136,7 @@ class Wrapper extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
     this.loadLocale = this.loadLocale.bind(this);
-    this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
   }
 
   // eslint-disable-next-line consistent-return
@@ -195,46 +188,6 @@ class Wrapper extends React.PureComponent {
     const lang = await loadLanguage(activeLocale);
 
     this.props.setUsedLocale(lang);
-  }
-
-  handleMenuItemClick(key) {
-    switch (key) {
-      case 'logout':
-        this.props.logout();
-        break;
-      case 'activity':
-        this.props.history.push('/activity');
-        break;
-      case 'replies':
-        this.props.history.push('/replies');
-        break;
-      case 'bookmarks':
-        this.props.history.push('/bookmarks');
-        break;
-      case 'drafts':
-        this.props.history.push('/drafts');
-        break;
-      case 'settings':
-        this.props.history.push('/settings');
-        break;
-      case 'feed':
-        this.props.history.push('/');
-        break;
-      case 'news':
-        this.props.history.push('/trending');
-        break;
-      case 'objects':
-        this.props.history.push('/objects');
-        break;
-      case 'wallet':
-        this.props.history.push('/wallet');
-        break;
-      case 'my-profile':
-        this.props.history.push(`/@${this.props.username}`);
-        break;
-      default:
-        break;
-    }
   }
 
   getAntdLocale = language => {

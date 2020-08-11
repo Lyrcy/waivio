@@ -18,6 +18,7 @@ const routeParts = {
 export default {
   SEGMENT: routeParts,
   WOBJ: {
+    BASE: 'object',
     params: [
       `${[
         routeParts.ABOUT,
