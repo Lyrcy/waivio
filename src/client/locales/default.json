@@ -1326,7 +1326,7 @@
   "error_boundary_page_home": "the home page",
   "hashtag": "hashtag",
   "menu": "Menu",
-  "dont_use_current_object_for_parent": "You cannot use the current object as a parent"
+  "dont_use_current_object_for_parent": "You cannot use the current object as a parent",
   "post_publication": "Your post will be posted soon",
   "create_new_campaign": "Create new campaign"
 }
