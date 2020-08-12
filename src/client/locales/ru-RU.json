@@ -1320,10 +1320,14 @@
   "error_boundary_page_brace": "Подождите, пока мы не исправим ошибку.",
   "error_boundary_page_try_reload": "Вы можете попробовать перезагрузить страницу",
   "error_boundary_page_go_to": "или вернуться на",
+  "reservations": "Резервации",
   "length_of_budget": "Бюджет кампании не может быть длиннее 10 символов.",
   "length_of_reward": "Награда не может быть длиннее 10 символов.",
-  "error_boundary_page_home": "главную страницу",
+  "menu": "Меню",
+  "dont_use_current_object_for_parent": "Вы не можете использовать текущий объект как родителяю",
   "post_publication": "Ваш пост скоро будет опубликован",
+  "error_boundary_page_home": "главную страницу",
+  "hashtag": "хэштег",
   "only_pending_campaigns": "Редактировать можно только ожидающие кампании",
   "create_new_campaign": "Создать новую компанию"
 }
