@@ -1323,5 +1323,6 @@
   "length_of_budget": "Campaign budget can't be longer than 10 characters.",
   "length_of_reward": "Reward can't be longer than 10 characters.",
   "error_boundary_page_home": "the home page",
-  "post_publication": "Your post will be posted soon"
+  "post_publication": "Your post will be posted soon",
+  "create_new_campaign": "Create new campaign"
 }
