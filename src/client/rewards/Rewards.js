@@ -32,6 +32,7 @@ import {
   getIsMapModalOpen,
   getSuitableLanguage,
   getPendingUpdate,
+  getIsAuthenticated,
 } from '../reducers';
 import LeftSidebar from '../app/Sidebar/LeftSidebar';
 import Affix from '../components/Utils/Affix';
@@ -77,6 +78,7 @@ import { getZoom } from '../components/Maps/mapHelper';
     isFullscreenMode: getIsMapModalOpen(state),
     usedLocale: getSuitableLanguage(state),
     pendingUpdate: getPendingUpdate(state),
+    authenticated: getIsAuthenticated(state),
   }),
   {
     assignProposition,
@@ -107,6 +109,7 @@ class Rewards extends React.Component {
     wobjects: PropTypes.arrayOf(PropTypes.shape()),
     getRewardsGeneralCounts: PropTypes.func.isRequired,
     pendingUpdate: PropTypes.bool,
+    authenticated: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -115,6 +118,7 @@ class Rewards extends React.Component {
     wobjects: [],
     pendingUpdate: false,
     location: {},
+    authenticated: false,
   };
 
   state = {
@@ -159,18 +163,19 @@ class Rewards extends React.Component {
   };
 
   componentDidMount() {
-    const { userLocation, match, username } = this.props;
+    const { userLocation, match, username, authenticated } = this.props;
     const { sortAll, sortEligible, sortReserved, url, activeFilters, area } = this.state;
     const sort = getSort(match, sortAll, sortEligible, sortReserved);
     if (username && !url) {
       this.getPropositionsByStatus({ username, sort });
     } else if (match.params.filterKey !== 'all') {
-      history.push(`/rewards/all`);
+      this.props.history.push(`/rewards/all`);
     }
     if (!size(userLocation)) {
       this.props.getCoordinates();
     }
-    if (!username) this.getPropositions({ username, match, activeFilters, area, sort });
+    if (!authenticated && match.params.filterKey === 'all')
+      this.getPropositions({ username, match, activeFilters, area, sort });
   }
 
   componentWillReceiveProps(nextProps) {
