@@ -160,7 +160,7 @@ class Rewards extends React.Component {
 
   componentDidMount() {
     const { userLocation, match, username } = this.props;
-    const { sortAll, sortEligible, sortReserved, url } = this.state;
+    const { sortAll, sortEligible, sortReserved, url, activeFilters, area } = this.state;
     const sort = getSort(match, sortAll, sortEligible, sortReserved);
     if (username && !url) {
       this.getPropositionsByStatus({ username, sort });
@@ -170,6 +170,7 @@ class Rewards extends React.Component {
     if (!size(userLocation)) {
       this.props.getCoordinates();
     }
+    if (!username) this.getPropositions({ username, match, activeFilters, area, sort });
   }
 
   componentWillReceiveProps(nextProps) {
