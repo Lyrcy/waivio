@@ -71,8 +71,10 @@ const Comments = ({
   const userVote = find(activeVotes, { voter: user.name });
 
   const onSendComment = useCallback(
-    (parentPost, commentBody, isUpdating, originalPost) =>
-      dispatch(commentsActions.sendComment(parentPost, commentBody, isUpdating, originalPost)),
+    (parentPost, commentBody, isUpdating, originalPost, parenAuthor) =>
+      dispatch(
+        commentsActions.sendComment(parentPost, commentBody, isUpdating, originalPost, parenAuthor),
+      ),
     [dispatch, commentsActions.sendComment],
   );
 

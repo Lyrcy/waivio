@@ -35,8 +35,8 @@ import { notify } from '../app/Notification/notificationActions';
       {
         getComments: commentsActions.getComments,
         voteComment: (id, percent, vote) => commentsActions.likeComment(id, percent, vote),
-        sendComment: (parentPost, body, isUpdating, originalPost) =>
-          commentsActions.sendComment(parentPost, body, isUpdating, originalPost),
+        sendComment: (parentPost, body, isUpdating, originalPost, parenAuthorGuest) =>
+          commentsActions.sendComment(parentPost, body, isUpdating, originalPost, parenAuthorGuest),
         notify,
       },
       dispatch,
@@ -67,6 +67,7 @@ export default class Comments extends React.Component {
     sendComment: PropTypes.func,
     getMessageHistory: PropTypes.func,
     match: PropTypes.shape(),
+    parentAuthorGuest: PropTypes.string,
   };
 
   static defaultProps = {
@@ -79,6 +80,7 @@ export default class Comments extends React.Component {
     show: false,
     isQuickComments: false,
     match: {},
+    parentAuthorGuest: '',
     notify: () => {},
     getComments: () => {},
     voteComment: () => {},
@@ -197,6 +199,7 @@ export default class Comments extends React.Component {
           onSendComment={this.props.sendComment}
           getMessageHistory={getMessageHistory}
           match={this.props.match}
+          parentAuthorGuest={this.props.parentAuthorGuest}
         />
       )
     );
