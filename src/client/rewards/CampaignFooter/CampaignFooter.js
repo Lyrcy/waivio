@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { message, Modal } from 'antd';
-import { findKey, find, get, isEmpty, map, includes } from 'lodash';
+import { findKey, find, get, isEmpty, map, includes, size } from 'lodash';
 import Slider from '../../components/Slider/Slider';
 import CampaignButtons from './CampaignButtons';
 import Comments from '../../comments/Comments';
@@ -275,7 +275,7 @@ class CampaignFooter extends React.Component {
   };
 
   render() {
-    const { commentsVisible, modalVisible, daysLeft, sliderVisible, currentPost } = this.state;
+    const { commentsVisible, modalVisible, daysLeft, sliderVisible } = this.state;
     const {
       post,
       postState,
@@ -310,7 +310,7 @@ class CampaignFooter extends React.Component {
     const rootKey = findKey(commentsAll, ['depth', 2]);
     const repliesKeys = get(commentsAll, [rootKey, 'replies']);
     const commentsArr = map(repliesKeys, key => get(commentsAll, [key]));
-    const numberOfComments = currentPost.children;
+    const numberOfComments = postCurrent ? size(commentsAll) - 1 : null;
 
     return (
       <div className="CampaignFooter">

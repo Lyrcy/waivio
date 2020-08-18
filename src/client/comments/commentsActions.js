@@ -1,4 +1,6 @@
+import React from 'react';
 import { get } from 'lodash';
+import { FormattedMessage } from 'react-intl';
 import { createCommentPermlink, getBodyPatchIfSmaller } from '../vendor/steemitHelpers';
 import { notify } from '../app/Notification/notificationActions';
 import { jsonParse } from '../helpers/formatter';
@@ -228,7 +230,19 @@ export const sendComment = (parentPost, body, isUpdating = false, originalCommen
           }
         })
         .catch(err => {
-          dispatch(notify(err.error.message || err.error_description, 'error'));
+          let description;
+          if (err.error_description === 'unknown key: ') {
+            description = (
+              <FormattedMessage
+                id="accounts_are_the_same"
+                defaultMessage="
+The sponsor and user accounts are the same. You cannot post a comment"
+              />
+            );
+          } else {
+            description = err.error_description;
+          }
+          dispatch(notify(err.error.message || description, 'error'));
           dispatch(SEND_COMMENT_ERROR);
         }),
     },
