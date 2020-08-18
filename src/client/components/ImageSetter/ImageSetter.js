@@ -69,6 +69,19 @@ const ImageSetter = ({
         }),
       );
     }
+
+    if (image) {
+      const selection = getEditorState().getSelection();
+      const key = selection.getAnchorKey();
+
+      setEditorState(addNewBlockAt(getEditorState(), key, Block.UNSTYLED, {}));
+      setEditorState(
+        addNewBlockAt(getEditorState(), key, Block.IMAGE, {
+          src: `${image.src.startsWith('http') ? image.src : `https://${image.src}`}`,
+          alt: image.name,
+        }),
+      );
+    }
   };
 
   // For image pasted for link
@@ -150,6 +163,8 @@ const ImageSetter = ({
           id: uuidv4(),
         };
 
+        uploadedImages.push(newImage);
+
         if (newImage) {
           const selection = getEditorState().getSelection();
           const key = selection.getAnchorKey();
@@ -162,8 +177,6 @@ const ImageSetter = ({
             }),
           );
         }
-
-        uploadedImages.push(newImage);
       };
       const onErrorLoadImage = () => {
         setLoadingImage(false);
