@@ -134,7 +134,6 @@ class EditPost extends Component {
         pathname: nextProps.location.pathname,
         search: `draft=${nextState.draftId}`,
       });
-
       return nextState;
     }
     return null;
@@ -294,6 +293,10 @@ class EditPost extends Component {
       ...settings,
     };
 
+    const object = get(linkedObjects, '[0]', {});
+    const objName = object.name || object.default_name;
+    this.setState(prevState => ({ topics: uniqWith([...prevState.topics, objName], isEqual) }));
+
     if (campaign && campaign.alias) {
       postData.body += `\n***\n${this.props.intl.formatMessage({
         id: `check_review_post_add_text`,
@@ -348,8 +351,8 @@ class EditPost extends Component {
     this.props.saveDraft(draft, redirect, this.props.intl);
   }, 1500);
 
-  handleHashtag = objectType =>
-    this.setState(prevState => ({ topics: uniqWith([...prevState.topics, objectType], isEqual) }));
+  handleHashtag = objectName =>
+    this.setState(prevState => ({ topics: uniqWith([...prevState.topics, objectName], isEqual) }));
 
   render() {
     const {
