@@ -4,6 +4,9 @@ import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import { map } from 'lodash';
 
+// Запрос внутри страницы
+// Записать в стейт Breadcrumb
+// add locale for request
 const CatalogBreadcrumb = ({ location, breadcrumb, intl }) => (
   <Breadcrumb separator={'>'}>
     {map(breadcrumb, (crumb, index, crumbsArr) => (
