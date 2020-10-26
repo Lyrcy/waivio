@@ -23,6 +23,7 @@ const PropositionListContainer = ({
   assignPropos,
   declinePropos,
 }) => {
+  console.log('PropositionListContainer');
   const [loadingPropositions, setLoadingPropositions] = useState(false);
   const [loadingAssignDiscard, setLoadingAssignDiscard] = useState(false);
   const [allPropositions, setAllPropositions] = useState([]);

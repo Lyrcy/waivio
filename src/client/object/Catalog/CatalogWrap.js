@@ -1,6 +1,6 @@
 import { withRouter } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { compose } from 'redux';
 import { get, isEmpty, map, filter, max, min, some } from 'lodash';
 import { injectIntl } from 'react-intl';
@@ -10,7 +10,7 @@ import { objectFields, statusNoVisibleItem } from '../../../common/constants/lis
 import OBJ_TYPE from '../const/objectTypes';
 import AddItemModal from './AddItemModal/AddItemModal';
 import { getObject } from '../../../waivioApi/ApiClient';
-import { getIsAuthenticated, getSuitableLanguage } from '../../reducers';
+import { getSuitableLanguage, getWobjectBreadCrumbs } from '../../reducers';
 import ObjectCardView from '../../objectCard/ObjectCardView';
 import CategoryItemView from './CategoryItemView/CategoryItemView';
 import { getPermLink, hasType, parseWobjectField } from '../../helpers/wObjectHelper';
@@ -25,9 +25,11 @@ import PropositionListContainer from '../../rewards/Proposition/PropositionList/
 import './CatalogWrap.less';
 
 const CatalogWrap = props => {
-  const { userName, wobject, isEditMode, intl, location, match, isAuthenticated } = props;
+  const { userName, wobject, isEditMode, intl, location, match } = props;
+
   const dispatch = useDispatch();
   const locale = useSelector(getSuitableLanguage);
+  const currentWobject = useSelector(getWobjectBreadCrumbs);
   const [loadingPropositions, setLoadingPropositions] = useState(true);
   const [propositions, setPropositions] = useState([]);
   const [sort, setSorting] = useState('recency');
@@ -36,6 +38,7 @@ const CatalogWrap = props => {
   const getPropositions = ({ requiredObject, sorting }) => {
     setLoadingPropositions(true);
     ApiClient.getPropositions({
+      userName,
       match,
       requiredObject,
       sort: 'reward',
@@ -51,13 +54,14 @@ const CatalogWrap = props => {
     const {
       location: { hash },
     } = props;
+
     if (!isEmpty(wobject)) {
       if (hash) {
         const pathUrl = getPermLink(hash);
         getObject(pathUrl, userName, locale).then(wObject => {
           const requiredObject = get(wObject, ['parent', 'author_permlink']);
           if (requiredObject) {
-            getPropositions({ match, requiredObject, sort });
+            getPropositions({ userName, match, requiredObject, sort });
           } else {
             setLoadingPropositions(false);
           }
@@ -67,10 +71,10 @@ const CatalogWrap = props => {
       } else {
         const requiredObject = get(wobject, ['parent', 'author_permlink']);
         setListItems(wobject.listItems);
-        getPropositions({ match, requiredObject, sort });
+        getPropositions({ userName, match, requiredObject, sort });
       }
     }
-  }, [props.location.hash, get(wobject, 'author_permlink', '')]);
+  }, [props.location.hash, props.wobject.author_permlink, userName]);
 
   const handleAddItem = listItem => {
     const currentList = isEmpty(listItems) ? [listItem] : [...listItems, listItem];
@@ -172,6 +176,8 @@ const CatalogWrap = props => {
     setListItems(sortListItemsBy(listItems, sortType, sortOrder));
   };
 
+  const obj = isEmpty(currentWobject) ? wobject : currentWobject;
+
   return (
     <div>
       {!hasType(wobject, OBJ_TYPE.PAGE) && (
@@ -179,7 +185,7 @@ const CatalogWrap = props => {
           {!isEmpty(propositions) && renderCampaign(propositions)}
           {isEditMode && (
             <div className="CatalogWrap__add-item">
-              <AddItemModal wobject={wobject} onAddItem={handleAddItem} />
+              <AddItemModal wobject={obj} onAddItem={handleAddItem} />
             </div>
           )}
           {loadingPropositions || isEmpty(wobject) ? (
@@ -197,7 +203,7 @@ const CatalogWrap = props => {
                 />
               </div>
               <div className="CatalogWrap">
-                <div>{isAuthenticated && getMenuList()}</div>
+                <div>{getMenuList()}</div>
               </div>
             </React.Fragment>
           )}
@@ -214,19 +220,13 @@ CatalogWrap.propTypes = {
   match: PropTypes.shape().isRequired,
   wobject: PropTypes.shape(),
   isEditMode: PropTypes.bool.isRequired,
-  userName: PropTypes.string.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
+  userName: PropTypes.string,
 };
 
 CatalogWrap.defaultProps = {
   wobject: {},
   locale: 'en-US',
   userName: '',
-  isAuthenticated: false,
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: getIsAuthenticated(state),
-});
-
-export default compose(connect(mapStateToProps, null), injectIntl, withRouter)(CatalogWrap);
+export default compose(injectIntl, withRouter)(CatalogWrap);
