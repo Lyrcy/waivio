@@ -22,8 +22,9 @@ const PropositionListContainer = ({
   user,
   assignPropos,
   declinePropos,
+  setCatalogPropositions,
+  isCatalogWrap,
 }) => {
-  console.log('PropositionListContainer');
   const [loadingPropositions, setLoadingPropositions] = useState(false);
   const [loadingAssignDiscard, setLoadingAssignDiscard] = useState(false);
   const [allPropositions, setAllPropositions] = useState([]);
@@ -37,8 +38,9 @@ const PropositionListContainer = ({
         data.campaigns,
         obj => obj.required_object.author_permlink === match.params.name,
       );
-      setAllPropositions(data.campaigns);
       setLoadingPropositions(false);
+      setAllPropositions(data.campaigns);
+      setCatalogPropositions(data.campaigns);
       setCurrentProposition(currentPropos[0]);
     });
   };
@@ -53,10 +55,17 @@ const PropositionListContainer = ({
         match,
         locale,
       };
+
       if (requiredObject) {
         reqData.requiredObject = requiredObject;
       } else {
         reqData.primaryObject = primaryObject;
+      }
+
+      if (isCatalogWrap) {
+        reqData.requiredObject = primaryObject;
+        reqData.sort = 'reward';
+        reqData.match = match;
       }
       getPropositions(reqData);
     }
@@ -169,28 +178,30 @@ const PropositionListContainer = ({
   };
 
   return (
-    <React.Fragment>
-      {loadingPropositions ? (
-        <Loading />
-      ) : (
-        <React.Fragment>
-          <PropositionList
-            wobject={wobject}
-            allPropositions={allPropositions}
-            currentProposition={currentProposition}
-            goToProducts={goToProducts}
-            discardProposition={discardProposition}
-            assignPropositionHandler={assignPropositionHandler}
-            user={user}
-            loadingAssignDiscard={loadingAssignDiscard}
-            isAssign={isAssign}
-            match={match}
-            userName={userName}
-            history={history}
-          />
-        </React.Fragment>
-      )}
-    </React.Fragment>
+    !isCatalogWrap && (
+      <React.Fragment>
+        {loadingPropositions ? (
+          <Loading />
+        ) : (
+          <React.Fragment>
+            <PropositionList
+              wobject={wobject}
+              allPropositions={allPropositions}
+              currentProposition={currentProposition}
+              goToProducts={goToProducts}
+              discardProposition={discardProposition}
+              assignPropositionHandler={assignPropositionHandler}
+              user={user}
+              loadingAssignDiscard={loadingAssignDiscard}
+              isAssign={isAssign}
+              match={match}
+              userName={userName}
+              history={history}
+            />
+          </React.Fragment>
+        )}
+      </React.Fragment>
+    )
   );
 };
 
@@ -204,6 +215,8 @@ PropositionListContainer.propTypes = {
   user: PropTypes.shape(),
   assignPropos: PropTypes.func,
   declinePropos: PropTypes.func,
+  setCatalogPropositions: PropTypes.func,
+  isCatalogWrap: PropTypes.bool,
 };
 
 PropositionListContainer.defaultProps = {
@@ -212,6 +225,8 @@ PropositionListContainer.defaultProps = {
   user: {},
   assignPropos: () => {},
   declinePropos: () => {},
+  setCatalogPropositions: () => {},
+  isCatalogWrap: false,
 };
 
 export default connect(

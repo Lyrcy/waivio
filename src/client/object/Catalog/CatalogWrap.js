@@ -16,7 +16,6 @@ import CategoryItemView from './CategoryItemView/CategoryItemView';
 import { getPermLink, hasType, parseWobjectField } from '../../helpers/wObjectHelper';
 import BodyContainer from '../../containers/Story/BodyContainer';
 import Loading from '../../components/Icon/Loading';
-import * as ApiClient from '../../../waivioApi/ApiClient';
 import Campaign from '../../rewards/Campaign/Campaign';
 import CatalogSorting from './CatalogSorting/CatalogSorting';
 import CatalogBreadcrumb from './CatalogBreadcrumb/CatalogBreadcrumb';
@@ -25,53 +24,28 @@ import PropositionListContainer from '../../rewards/Proposition/PropositionList/
 import './CatalogWrap.less';
 
 const CatalogWrap = props => {
-  const { userName, wobject, isEditMode, intl, location, match } = props;
+  const { userName, wobject, isEditMode, intl, location } = props;
 
   const dispatch = useDispatch();
   const locale = useSelector(getSuitableLanguage);
   const currentWobject = useSelector(getWobjectBreadCrumbs);
-  const [loadingPropositions, setLoadingPropositions] = useState(true);
   const [propositions, setPropositions] = useState([]);
   const [sort, setSorting] = useState('recency');
   const [listItems, setListItems] = useState([]);
-
-  const getPropositions = ({ requiredObject, sorting }) => {
-    setLoadingPropositions(true);
-    ApiClient.getPropositions({
-      userName,
-      match,
-      requiredObject,
-      sort: 'reward',
-      locale,
-    }).then(data => {
-      setPropositions(data.campaigns);
-      setSorting(sorting);
-      setLoadingPropositions(false);
-    });
-  };
 
   useEffect(() => {
     const {
       location: { hash },
     } = props;
-
     if (!isEmpty(wobject)) {
       if (hash) {
         const pathUrl = getPermLink(hash);
         getObject(pathUrl, userName, locale).then(wObject => {
-          const requiredObject = get(wObject, ['parent', 'author_permlink']);
-          if (requiredObject) {
-            getPropositions({ userName, match, requiredObject, sort });
-          } else {
-            setLoadingPropositions(false);
-          }
           setListItems(wObject.listItems);
           dispatch(setWobjectForBreadCrumbs(wObject));
         });
       } else {
-        const requiredObject = get(wobject, ['parent', 'author_permlink']);
         setListItems(wobject.listItems);
-        getPropositions({ userName, match, requiredObject, sort });
       }
     }
   }, [props.location.hash, props.wobject.author_permlink, userName]);
@@ -183,12 +157,18 @@ const CatalogWrap = props => {
       {!hasType(wobject, OBJ_TYPE.PAGE) && (
         <React.Fragment>
           {!isEmpty(propositions) && renderCampaign(propositions)}
+          <PropositionListContainer
+            wobject={wobject}
+            userName={userName}
+            setCatalogPropositions={setPropositions}
+            isCatalogWrap
+          />
           {isEditMode && (
             <div className="CatalogWrap__add-item">
               <AddItemModal wobject={obj} onAddItem={handleAddItem} />
             </div>
           )}
-          {loadingPropositions || isEmpty(wobject) ? (
+          {isEmpty(wobject) ? (
             <Loading />
           ) : (
             <React.Fragment>
@@ -217,7 +197,6 @@ const CatalogWrap = props => {
 CatalogWrap.propTypes = {
   intl: PropTypes.shape().isRequired,
   location: PropTypes.shape().isRequired,
-  match: PropTypes.shape().isRequired,
   wobject: PropTypes.shape(),
   isEditMode: PropTypes.bool.isRequired,
   userName: PropTypes.string,
