@@ -96,7 +96,6 @@ const CatalogBreadcrumb = props => {
           createBreadCrumbs(wobjectRes);
           dispatch(setCatalogBreadCrumbs(currentBreadCrumbs));
         } else {
-          createBreadCrumbs(currentBreadCrumbs);
           dispatch(setCatalogBreadCrumbs(wobjectRes));
         }
       });
